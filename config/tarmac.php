@@ -93,4 +93,24 @@ return [
         'max_records_per_type' => 500,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Over-the-air releases
+    |--------------------------------------------------------------------------
+    |
+    | The nativephp/mobile-ota plugin checks GET /api/v1/apps/{project}/...
+    | for new bundles; native APKs are offered by /api/v1/app-builds/...
+    | Files live on the given filesystem disk (a private S3 / Laravel Cloud
+    | bucket in production). Publishing requires "Authorization: Bearer
+    | <publish_token>" and is disabled while the token is empty.
+    |
+    */
+
+    'ota' => [
+        'project' => env('OTA_PROJECT') ?: 'tarmac',
+        'disk' => env('OTA_DISK') ?: 'local',
+        'publish_token' => env('OTA_PUBLISH_TOKEN'),
+        'download_ttl_minutes' => 30,
+    ],
+
 ];
