@@ -1,0 +1,228 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Tarmac — charte graphique v1.0
+  Asphalte #0E0F11 · Carbone #17191D · Graphite #262930 / #33363E
+  Craie #F2F2F0 · Gris piste #A3A7AE
+  Feu vert #C6F432 (OK, action principale, record) · Signal #FF8A3D (attention)
+  Télémétrie #5AA9FF (info) · Critique #FF4D3D (danger moteur)
+*/
+@theme inline {
+    --font-sans: 'Barlow', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --font-display:
+        'Barlow Condensed', 'Arial Narrow', ui-sans-serif, system-ui, sans-serif;
+
+    --radius-sm: 10px;
+    --radius-md: 12px;
+    --radius-lg: var(--radius);
+    --radius-xl: 20px;
+    --radius-2xl: 22px;
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar-background);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Meaning colors: one color = one meaning */
+    --color-ok: var(--ok);
+    --color-ok-bg: var(--ok-bg);
+    --color-ok-border: var(--ok-border);
+    --color-warn: var(--warn);
+    --color-warn-text: var(--warn-text);
+    --color-warn-bg: var(--warn-bg);
+    --color-info: var(--info);
+    --color-danger: var(--danger);
+    --color-danger-bg: var(--danger-bg);
+    --color-danger-border: var(--danger-border);
+    --color-line: var(--line);
+}
+
+/* Light ("inversé sur clair") — the app is dark by default. */
+:root {
+    --radius: 16px;
+
+    --background: #f2f2f0;
+    --foreground: #0e0f11;
+    --card: #ffffff;
+    --card-foreground: #0e0f11;
+    --popover: #ffffff;
+    --popover-foreground: #0e0f11;
+    --primary: #0e0f11;
+    --primary-foreground: #c6f432;
+    --secondary: #e4e5e2;
+    --secondary-foreground: #0e0f11;
+    --muted: #e4e5e2;
+    --muted-foreground: #565a61;
+    --accent: #e4e5e2;
+    --accent-foreground: #0e0f11;
+    --destructive: #d42f20;
+    --destructive-foreground: #ffffff;
+    --border: #d8d9d6;
+    --input: #c9cbc7;
+    --ring: #0e0f11;
+    --line: #d8d9d6;
+
+    --ok: #4a6a00;
+    --ok-bg: #eef7d0;
+    --ok-border: #b9d66a;
+    --warn: #c25a12;
+    --warn-text: #a84b0b;
+    --warn-bg: #fdebdc;
+    --info: #1f6fc4;
+    --danger: #d42f20;
+    --danger-bg: #fde4e1;
+    --danger-border: #f2a59c;
+
+    --chart-1: #4a6a00;
+    --chart-2: #1f6fc4;
+    --chart-3: #c25a12;
+    --chart-4: #565a61;
+    --chart-5: #d42f20;
+
+    --sidebar-background: #ffffff;
+    --sidebar-foreground: #0e0f11;
+    --sidebar-primary: #0e0f11;
+    --sidebar-primary-foreground: #c6f432;
+    --sidebar-accent: #e4e5e2;
+    --sidebar-accent-foreground: #0e0f11;
+    --sidebar-border: #d8d9d6;
+    --sidebar-ring: #0e0f11;
+    --sidebar: #ffffff;
+}
+
+.dark {
+    --background: #0e0f11; /* Asphalte */
+    --foreground: #f2f2f0; /* Craie */
+    --card: #17191d; /* Carbone */
+    --card-foreground: #f2f2f0;
+    --popover: #17191d;
+    --popover-foreground: #f2f2f0;
+    --primary: #c6f432; /* Feu vert */
+    --primary-foreground: #0e0f11;
+    --secondary: #262930;
+    --secondary-foreground: #f2f2f0;
+    --muted: #262930;
+    --muted-foreground: #a3a7ae; /* Gris piste */
+    --accent: #262930;
+    --accent-foreground: #f2f2f0;
+    --destructive: #ff4d3d; /* Critique */
+    --destructive-foreground: #0e0f11;
+    --border: #262930; /* Graphite */
+    --input: #33363e;
+    --ring: #c6f432;
+    --line: #33363e;
+
+    --ok: #c6f432;
+    --ok-bg: #1a2310;
+    --ok-border: #4a5c1c;
+    --warn: #ff8a3d;
+    --warn-text: #ff9f5c;
+    --warn-bg: #2a1a0e;
+    --info: #5aa9ff;
+    --danger: #ff4d3d;
+    --danger-bg: #2a0f0c;
+    --danger-border: #6b2a22;
+
+    --chart-1: #c6f432;
+    --chart-2: #5aa9ff;
+    --chart-3: #ff8a3d;
+    --chart-4: #a3a7ae;
+    --chart-5: #ff4d3d;
+
+    --sidebar-background: #0e0f11;
+    --sidebar-foreground: #f2f2f0;
+    --sidebar-primary: #c6f432;
+    --sidebar-primary-foreground: #0e0f11;
+    --sidebar-accent: #17191d;
+    --sidebar-accent-foreground: #f2f2f0;
+    --sidebar-border: #262930;
+    --sidebar-ring: #c6f432;
+    --sidebar: #0e0f11;
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-size: 16px;
+        line-height: 1.55;
+    }
+
+    h1,
+    h2,
+    h3 {
+        line-height: 1.1;
+    }
+}
+
+@layer utilities {
+    /* Numbers & titles: Barlow Condensed with tabular figures (they don't "dance"). */
+    .num {
+        font-family: var(--font-display);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .tabular {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .font-display {
+        font-family: var(--font-display);
+    }
+
+    .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+}
