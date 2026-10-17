@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DtcCause;
 use App\Models\DtcDefinition;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -19,24 +20,43 @@ class DtcDefinitionSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::transaction(function (): void {
-            foreach ($this->definitions() as $code => $entry) {
-                $definition = DtcDefinition::query()->updateOrCreate(
-                    ['code' => $code, 'make' => '', 'engine' => ''],
-                    [
-                        'title' => $entry['title'],
-                        'system' => $entry['system'],
-                        'explanation' => $entry['explanation'],
-                        'urgency' => $entry['urgency'],
-                        'can_drive_note' => $entry['note'],
-                        'source' => 'kb',
-                    ],
-                );
+        $definitions = $this->definitions();
+        $now = now();
 
-                $definition->causes()->delete();
+        // Bulk statements only: a remote database (Neon) costs a network round
+        // trip per query, so row-by-row seeding would take minutes.
+        DB::transaction(function () use ($definitions, $now): void {
+            DtcDefinition::query()->upsert(
+                collect($definitions)->map(fn (array $entry, string $code): array => [
+                    'code' => $code,
+                    'make' => '',
+                    'engine' => '',
+                    'title' => $entry['title'],
+                    'system' => $entry['system'],
+                    'explanation' => $entry['explanation'],
+                    'urgency' => $entry['urgency'],
+                    'can_drive_note' => $entry['note'],
+                    'source' => 'kb',
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ])->values()->all(),
+                ['code', 'make', 'engine'],
+                ['title', 'system', 'explanation', 'urgency', 'can_drive_note', 'source', 'updated_at'],
+            );
 
+            $ids = DtcDefinition::query()
+                ->where('make', '')
+                ->where('engine', '')
+                ->whereIn('code', array_keys($definitions))
+                ->pluck('id', 'code');
+
+            DtcCause::query()->whereIn('dtc_definition_id', $ids->values())->delete();
+
+            $causes = [];
+            foreach ($definitions as $code => $entry) {
                 foreach ($entry['causes'] as $position => [$label, $probability, $part, $difficulty, $costMin, $costMax]) {
-                    $definition->causes()->create([
+                    $causes[] = [
+                        'dtc_definition_id' => $ids[$code],
                         'label' => $label,
                         'probability' => $probability,
                         'part' => $part,
@@ -44,8 +64,14 @@ class DtcDefinitionSeeder extends Seeder
                         'cost_min' => $costMin,
                         'cost_max' => $costMax,
                         'position' => $position,
-                    ]);
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
                 }
+            }
+
+            foreach (array_chunk($causes, 200) as $chunk) {
+                DtcCause::query()->insert($chunk);
             }
         });
     }
