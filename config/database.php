@@ -97,6 +97,12 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
+            // Neon's pooled endpoint runs PgBouncer in transaction mode: server-side
+            // prepared statements break inside transactions (SQLSTATE 25P02), so
+            // PDO emulates them client-side instead.
+            'options' => [
+                PDO::ATTR_EMULATE_PREPARES => (bool) env('DB_EMULATE_PREPARES', true),
+            ],
         ],
 
         /*
